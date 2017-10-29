@@ -34,16 +34,15 @@ class SnowStorm {
 		this.frame = 0;
 		this.maxFlakes = false;
 
-		new Promise((resolve, reject) => 	{
-			this.createCanvas(resolve, reject);
-		}).then(() => {
+		new Promise((resolve, reject) => this.createCanvas(resolve, reject))
+		.then(() => {
 			this.active = true;
 			this.updateCanvas();
 		});
 	}
 
 	getVersion() {
-		const currentVersion = '0.4.0';
+		const currentVersion = '0.5.0';
 
 		return `snowStorm version: ${currentVersion}`;
 	}
@@ -125,8 +124,13 @@ class SnowStorm {
 
 	}
 
-	destroy() {
+	destroy(refName) {
+		this.active = false;
+		this.canvas.remove();
 
+		// TODO: Remove all instance based things, timer and eventListners; THEN remove the object/class itself
+
+		console.warn('Goodbye.');
 	}
 
 	pause() {
