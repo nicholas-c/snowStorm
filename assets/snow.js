@@ -4,10 +4,10 @@ class Snowflake {
 		this.canvasWidth = width;
 
 		this.settings = settings;
-		this.update = this.update;
+		this.reset = this.reset;
 	}
 
-	update() {
+	reset() {
 		this.y = 0;
 		this.x = Math.random() * this.canvasWidth;
 		this.vy = ((1 + Math.random()) / 2) * this.settings.speed;
@@ -37,12 +37,13 @@ class SnowStorm {
 		new Promise((resolve, reject) => this.createCanvas(resolve, reject))
 		.then(() => {
 			this.active = true;
+			this.bindEvents();
 			this.updateCanvas();
 		});
 	}
 
 	getVersion() {
-		const currentVersion = '0.5.0';
+		const currentVersion = '0.6.0';
 
 		return `snowStorm version: ${currentVersion}`;
 	}
@@ -60,10 +61,9 @@ class SnowStorm {
 			this.canvas = canvasElement;
 			this.context = this.canvas.getContext('2d');
 
-			this.canvas.width = this.element.clientWidth;
-			this.canvas.height = this.element.clientHeight;
-
+			this.resize();
 			this.element.append(this.canvas);
+
 			resolve();
 		} else {
 			console.error('Feed me single elements, I\'m being lazy!');
@@ -76,23 +76,29 @@ class SnowStorm {
 		for (let i = 0; i < quantity; i++) {
 			const snowflake = new Snowflake(this.settings, this.canvas.height, this.canvas.width);
 
-			snowflake.update();
+			snowflake.reset();
 
 			this.snowFlakes.push(snowflake);
 		}
+
+		return true;
+	}
+
+	bindEvents() {
+		window.addEventListener('resize', () => {
+			this.resize();
+		});
 	}
 
 	updateCanvas() {
 		if ( ! this.active) {
-			setTimeout(() => {snowstorm.updateCanvas()}, 16);
+			setTimeout(() => snowstorm.updateCanvas, 16);
 			return;
 		}
 
 		this.frame++;
 
-		if (! this.maxFlakes && this.frame % (30 / (this.settings.density * -1)) == 0) {
-			this.createSnowflakes(10);
-		}
+		if (! this.maxFlakes && this.frame % (30 / (this.settings.density * -1)) == 0) this.createSnowflakes(10);
 
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -107,29 +113,31 @@ class SnowStorm {
 			this.context.fillStyle = '#fff';
 			this.context.fill();
 
-			if (snowflake.x < 0 || snowflake.x > this.canvas.width) {
-				snowflake.update();
-			}
+			if (snowflake.x < 0 || snowflake.x > this.canvas.width) snowflake.reset();
 
 			if (snowflake.y > this.canvas.height) {
 				this.maxFlakes = true;
-				snowflake.update();
+				snowflake.reset();
 			}
 		});
 
-		setTimeout(() => {snowstorm.updateCanvas()}, 16);
+		setTimeout(() => snowstorm.updateCanvas(), 16);
 	}
 
 	reset() {
 
 	}
 
-	destroy(refName) {
+	resize() {
+		this.canvas.width = this.element.clientWidth;
+		this.canvas.height = this.element.clientHeight;
+		return true;
+	}
+
+	destroy() {
+		// TODO: Remove all instance based things, timer and eventListners; THEN remove the object/class itself
 		this.active = false;
 		this.canvas.remove();
-
-		// TODO: Remove all instance based things, timer and eventListners; THEN remove the object/class itself
-
 		console.warn('Goodbye.');
 	}
 
@@ -137,18 +145,14 @@ class SnowStorm {
 		if (this.active) {
 			this.active = false;
 			return 'The storm has been stopped.';
-		} else {
-			return 'The storm has already stopped.';
-		}
+		} else return 'The storm has already stopped.';
 	}
 
 	resume() {
 		if ( ! this.active) {
 			this.active = true;
 			return 'Winter is coming...'
-		} else {
-			return 'A storm is already in progress.';
-		}
+		} else return 'A storm is already in progress.';
 	}
 }
 
