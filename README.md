@@ -1,4 +1,4 @@
-# Snow Storm v0.3.1
+# Snow Storm v0.4.0
 Snow Storm is a vanilla JS Library which adds snow to any page. Options are documented below, however allow configuration to choose which element to attach to, and which pages to inialise on.
 
 Open to all, and any PR to improve functionality or code.

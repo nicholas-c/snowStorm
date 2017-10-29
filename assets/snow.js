@@ -25,7 +25,7 @@ class SnowStorm {
 			color: '#fff',
 			speed: 1,
 			size: 1,
-			particleMax: 500,
+			density: 1, // BE CAREFUL - Low numbers recommended; 2017 Macbook pro runs at 80% CPU Usage and 1.1gb memory used with "20" set here.
 		}
 
 		this.snowFlakes = [];
@@ -43,7 +43,7 @@ class SnowStorm {
 	}
 
 	getVersion() {
-		const currentVersion = '0.3.1';
+		const currentVersion = '0.4.0';
 
 		return `snowStorm version: ${currentVersion}`;
 	}
@@ -91,7 +91,7 @@ class SnowStorm {
 
 		this.frame++;
 
-		if (! this.maxFlakes && this.frame % 30 == 0) {
+		if (! this.maxFlakes && this.frame % (30 / (this.settings.density * -1)) == 0) {
 			this.createSnowflakes(10);
 		}
 
