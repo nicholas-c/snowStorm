@@ -7,10 +7,10 @@ Open to all, and any PR to improve functionality or code.
 - [x] Create base structure with ES6
 - [x] Method to create "Canvas" Element
 - [x] Snowflakes as seperate class to enable extension
-- [ ] Draw on canvas and snow elements
-- [ ] Multiple snowstorm elements
+- [x] Draw on canvas and snow elements
 - [ ] Limit FPS
 - [ ] Clear memory stack when it all gets a bit too much
+- [ ] Multiple snowstorm elements
 - [ ] Destory method (Remove everything and flush memory and commit suicide)
 - [ ] Page specific triggers and initialisation
 - [ ] Move elements into the config array and have default element (Body)
@@ -21,7 +21,7 @@ Open to all, and any PR to improve functionality or code.
 ## Installation
 Plan on making this an NPM and Yarn package, watch this space.
 
-For now, file goes in claases
+For now, file goes in a folder and compiled and class called with `new` constructor
 
 ## Initalisation
 For now (See todo) only a _*single*_ element can be passed in, such as the body tag
