@@ -43,7 +43,7 @@ class SnowStorm {
 	}
 
 	getVersion() {
-		const currentVersion = '0.3.0';
+		const currentVersion = '0.3.1';
 
 		return `snowStorm version: ${currentVersion}`;
 	}
@@ -95,7 +95,7 @@ class SnowStorm {
 			this.createSnowflakes(10);
 		}
 
-		this.context.clearRect(0, 0, this.canvas.height, this.canvas.width);
+		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
 		this.snowFlakes.forEach(snowflake => {
 			snowflake.y += snowflake.vy;
