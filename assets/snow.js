@@ -8,7 +8,7 @@ class Snowflake {
 	}
 
 	update() {
-		this.y = Math.random() * this.canvasHeight;
+		this.y = 0;
 		this.x = Math.random() * this.canvasWidth;
 		this.vy = ((1 + Math.random()) / 2) * this.settings.speed;
 		this.vx = 0.5 - Math.random();
@@ -25,18 +25,19 @@ class SnowStorm {
 			color: '#fff',
 			speed: 1,
 			size: 1,
-			particleMax: 350,
+			particleMax: 500,
 		}
 
 		this.snowFlakes = [];
 		this.active = false;
 		this.version = this.getVersion();
+		this.frame = 0;
+		this.maxFlakes = false;
 
 		new Promise((resolve, reject) => 	{
 			this.createCanvas(resolve, reject);
-		}).then((resolve, reject) => {
-			this.createSnowflakes(resolve, reject);
 		}).then(() => {
+			this.active = true;
 			this.updateCanvas();
 		});
 	}
@@ -59,6 +60,10 @@ class SnowStorm {
 
 			this.canvas = canvasElement;
 			this.context = this.canvas.getContext('2d');
+
+			this.canvas.width = this.element.clientWidth;
+			this.canvas.height = this.element.clientHeight;
+
 			this.element.append(this.canvas);
 			resolve();
 		} else {
@@ -67,9 +72,9 @@ class SnowStorm {
 		}
 	}
 
-	createSnowflakes() {
+	createSnowflakes(quantity) {
 		// Every snowflake is unique.
-		for (let i = 0; i < this.settings.particleMax; i++) {
+		for (let i = 0; i < quantity; i++) {
 			const snowflake = new Snowflake(this.settings, this.canvas.height, this.canvas.width);
 
 			snowflake.update();
@@ -79,16 +84,20 @@ class SnowStorm {
 	}
 
 	updateCanvas() {
-		if ( ! this.active) return;
+		if ( ! this.active) {
+			setTimeout(() => {snowstorm.updateCanvas()}, 16);
+			return;
+		}
 
-		this.canvas.width = this.element.clientWidth;
-		this.canvas.height = this.element.clientHeight;
+		this.frame++;
+
+		if (! this.maxFlakes && this.frame % 30 == 0) {
+			this.createSnowflakes(10);
+		}
 
 		this.context.clearRect(0, 0, this.canvas.height, this.canvas.width);
 
-		for (let i = 0; i < this.snowFlakes; i++) {
-			const snowflake = this.snowFlakes[i];
-
+		this.snowFlakes.forEach(snowflake => {
 			snowflake.y += snowflake.vy;
 			snowflake.x += snowflake.vx;
 
@@ -96,12 +105,20 @@ class SnowStorm {
 			this.context.beginPath();
 			this.context.arc(snowflake.x, snowflake.y, snowflake.r, 0, Math.PI * 2, false);
 			this.context.closePath();
+			this.context.fillStyle = '#fff';
 			this.context.fill();
 
-			if (snowflake.y > this.canvas.height) snowflake.update();
-		}
+			if (snowflake.x < 0 || snowflake.x > this.canvas.width) {
+				snowflake.update();
+			}
 
-		requestAnimFrame(this.updateCanvas());
+			if (snowflake.y > this.canvas.height) {
+				this.maxFlakes = true;
+				snowflake.update();
+			}
+		});
+
+		setTimeout(() => {snowstorm.updateCanvas()}, 16);
 	}
 
 	reset() {
@@ -132,7 +149,7 @@ class SnowStorm {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-	const snowstorm = new SnowStorm(document.querySelector('section'));
+	window.snowstorm = new SnowStorm(document.querySelector('section'));
 
-	console.log(snowstorm);
+	console.log(snowstorm.version);
 });
