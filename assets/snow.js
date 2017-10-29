@@ -30,6 +30,7 @@ class SnowStorm {
 
 		this.snowFlakes = [];
 		this.active = false;
+		this.version = this.getVersion();
 
 		new Promise((resolve, reject) => 	{
 			this.createCanvas(resolve, reject);
@@ -38,6 +39,12 @@ class SnowStorm {
 		}).then(() => {
 			this.updateCanvas();
 		});
+	}
+
+	getVersion() {
+		const currentVersion = '0.1.0';
+
+		return `snowStorm version: ${currentVersion}`;
 	}
 
 	createCanvas(resolve, reject) {
@@ -72,10 +79,12 @@ class SnowStorm {
 	}
 
 	updateCanvas() {
-		console.log(this.element.clientHeight);
 		this.canvas.width = this.element.clientWidth;
 		this.canvas.height = this.element.clientHeight;
 		this.context.clearRect(0, 0, this.canvas.height, this.canvas.width);
+
+		for (i = 0; i < this.snowFlakes; i++) {
+		}
 	}
 
 	reset() {
@@ -92,5 +101,7 @@ class SnowStorm {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-	new SnowStorm(document.querySelector('section'));
+	const snowstorm = new SnowStorm(document.querySelector('section'));
+
+	console.log(snowstorm);
 });
