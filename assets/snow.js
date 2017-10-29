@@ -42,7 +42,7 @@ class SnowStorm {
 	}
 
 	getVersion() {
-		const currentVersion = '0.1.0';
+		const currentVersion = '0.2.0';
 
 		return `snowStorm version: ${currentVersion}`;
 	}
@@ -79,12 +79,29 @@ class SnowStorm {
 	}
 
 	updateCanvas() {
+		if ( ! this.active) return;
+
 		this.canvas.width = this.element.clientWidth;
 		this.canvas.height = this.element.clientHeight;
+
 		this.context.clearRect(0, 0, this.canvas.height, this.canvas.width);
 
-		for (i = 0; i < this.snowFlakes; i++) {
+		for (let i = 0; i < this.snowFlakes; i++) {
+			const snowflake = this.snowFlakes[i];
+
+			snowflake.y += snowflake.vy;
+			snowflake.x += snowflake.vx;
+
+			this.context.globalAlpha = snowflake.o;
+			this.context.beginPath();
+			this.context.arc(snowflake.x, snowflake.y, snowflake.r, 0, Math.PI * 2, false);
+			this.context.closePath();
+			this.context.fill();
+
+			if (snowflake.y > this.canvas.height) snowflake.update();
 		}
+
+		requestAnimFrame(this.updateCanvas());
 	}
 
 	reset() {
@@ -96,7 +113,21 @@ class SnowStorm {
 	}
 
 	pause() {
+		if (this.active) {
+			this.active = false;
+			return 'The storm has been stopped.';
+		} else {
+			return 'The storm has already stopped.';
+		}
+	}
 
+	resume() {
+		if ( ! this.active) {
+			this.active = true;
+			return 'Winter is coming...'
+		} else {
+			return 'A storm is already in progress.';
+		}
 	}
 }
 
