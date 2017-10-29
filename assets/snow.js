@@ -43,7 +43,7 @@ class SnowStorm {
 	}
 
 	getVersion() {
-		const currentVersion = '0.2.0';
+		const currentVersion = '0.3.0';
 
 		return `snowStorm version: ${currentVersion}`;
 	}
