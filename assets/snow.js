@@ -5,15 +5,20 @@ class Snowflake {
 
 		this.settings = settings;
 		this.reset = this.reset;
+
+		this.setup();
 	}
 
-	reset() {
-		this.y = 0;
+	setup() {
+		this.r = 1 + Math.random() * this.settings.size;
+		this.o = 0.5 + Math.random() * 0.5;
+	}
+
+	reset(verticalReset = false) {
+		if ( ! verticalReset) this.y = -this.r;
 		this.x = Math.random() * this.canvasWidth;
 		this.vy = ((1 + Math.random()) / 2) * this.settings.speed;
 		this.vx = 0.5 - Math.random();
-		this.r = 1 + Math.random() * this.settings.size;
-		this.o = 0.5 + Math.random() * 0.5;
 	}
 }
 
@@ -25,8 +30,10 @@ class SnowStorm {
 			color: '#fff',
 			speed: 1,
 			size: 1,
-			density: 1, // BE CAREFUL - Low numbers recommended; 2017 Macbook pro runs at 80% CPU Usage and 1.1gb memory used with "20" set here.
+			density: 2,
 		}
+
+		if (this.settings.density > 2) console.warn('Increasing density will decrease performance on lower end devices. Use with caution.');
 
 		this.snowFlakes = [];
 		this.active = false;
@@ -43,8 +50,7 @@ class SnowStorm {
 	}
 
 	getVersion() {
-		const currentVersion = '0.6.0';
-
+		const currentVersion = '0.7.0';
 		return `snowStorm version: ${currentVersion}`;
 	}
 
@@ -85,22 +91,18 @@ class SnowStorm {
 	}
 
 	bindEvents() {
-		window.addEventListener('resize', () => {
-			this.resize();
-		});
+		window.addEventListener('resize', () => this.resize());
 	}
 
 	updateCanvas() {
-		if ( ! this.active) {
-			setTimeout(() => snowstorm.updateCanvas, 16);
-			return;
-		}
+		let PI2 = Math.PI * 2;
 
-		this.frame++;
-
-		if (! this.maxFlakes && this.frame % (30 / (this.settings.density * -1)) == 0) this.createSnowflakes(10);
+		if (! this.active) return;
+		if (this.snowFlakes.length < 150 && this.frame++ % (7 / (this.settings.density * -1)) == 0) this.createSnowflakes(1);
 
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+		this.context.fillStyle = '#fff';
 
 		this.snowFlakes.forEach(snowflake => {
 			snowflake.y += snowflake.vy;
@@ -108,29 +110,30 @@ class SnowStorm {
 
 			this.context.globalAlpha = snowflake.o;
 			this.context.beginPath();
-			this.context.arc(snowflake.x, snowflake.y, snowflake.r, 0, Math.PI * 2, false);
+			this.context.arc(snowflake.x, snowflake.y, snowflake.r, 0, PI2, false);
 			this.context.closePath();
-			this.context.fillStyle = '#fff';
 			this.context.fill();
 
-			if (snowflake.x < 0 || snowflake.x > this.canvas.width) snowflake.reset();
-
-			if (snowflake.y > this.canvas.height) {
-				this.maxFlakes = true;
-				snowflake.reset();
-			}
+			if (snowflake.x < 0 || snowflake.x > this.canvas.width || snowflake.y > this.canvas.height) snowflake.reset();
 		});
 
-		setTimeout(() => snowstorm.updateCanvas(), 16);
+		requestAnimationFrame(() => this.updateCanvas());
 	}
 
 	reset() {
-
+		this.snowFlakes = [];
 	}
 
 	resize() {
 		this.canvas.width = this.element.clientWidth;
 		this.canvas.height = this.element.clientHeight;
+
+		this.snowFlakes.forEach(el => {
+			el.canvasHeight = this.canvas.height;
+			el.canvasWidth = this.canvas.width;
+			el.reset(true);
+		});
+
 		return true;
 	}
 
@@ -151,6 +154,7 @@ class SnowStorm {
 	resume() {
 		if ( ! this.active) {
 			this.active = true;
+			this.updateCanvas();
 			return 'Winter is coming...'
 		} else return 'A storm is already in progress.';
 	}
@@ -158,6 +162,4 @@ class SnowStorm {
 
 document.addEventListener('DOMContentLoaded', () => {
 	window.snowstorm = new SnowStorm(document.querySelector('section'));
-
-	console.log(snowstorm.version);
 });
