@@ -1,6 +1,7 @@
 import Snowflake from './Snowflake';
 import Promise from 'core-js/es6/promise';
-import Object from 'core-js/es6/object';
+require('es6-object-assign').polyfill();
+// import Object from 'core-js/es6/object';
 
 class SnowStorm {
 	constructor(element, settings) {
