@@ -1,6 +1,6 @@
 {
   "name": "snow-storm",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Snow Storm is a vanilla JS Library which adds snow to any page. Options are documented below, however allow configuration to choose which element to attach to, and which pages to inialise on.",
   "main": "src/index.js",
   "scripts": {

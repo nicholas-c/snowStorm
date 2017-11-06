@@ -1,5 +1,6 @@
 import Snowflake from './Snowflake';
 import Promise from 'core-js/es6/promise';
+import Object from 'core-js/es6/object';
 
 class SnowStorm {
 	constructor(element, settings) {
@@ -35,7 +36,7 @@ class SnowStorm {
 	}
 
 	getVersion() {
-		const currentVersion = '0.8.0';
+		const currentVersion = '0.8.1';
 		return `snowStorm version: ${currentVersion}`;
 	}
 
