@@ -1,7 +1,9 @@
-# Snow Storm v0.7.0
+# Snow Storm v0.8.0
 Snow Storm is a vanilla JS Library which adds snow to any page. Options are documented below, however allow configuration to choose which element to attach to, and which pages to inialise on.
 
 Open to all, and any PR to improve functionality or code.
+
+*Now with more babel*
 
 ## TODO:
 - [x] Create base structure with ES6
@@ -16,7 +18,7 @@ Open to all, and any PR to improve functionality or code.
 - [ ] Move elements into the config array and have default element (Body)
 - [ ] Config to be passed in and merged with default values (Color, speed, direction)
 - [ ] Enable extra features such as mouse control (Features undecided)
-- [ ] Enable backwards compatibility and use task runners to make Babel nice-ness
+- [x] Enable backwards compatibility and use task runners to make Babel nice-ness
 
 ## Installation
 Plan on making this an NPM and Yarn package, watch this space.
@@ -29,9 +31,9 @@ For now (See todo) only a _*single*_ element can be passed in, such as the body 
 WARNING: Body tag doesn't get it's height properly, so avoid body and use a page wrap or the likes.
 
 ```
-const element = document.querySelector('.selector');
+var element = document.querySelector('.selector');
 
-const snowstorm = new SnowStorm(element, {});
+var snowstorm = new SnowStorm(element, {});
 ```
 
 ## Options

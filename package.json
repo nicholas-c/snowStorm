@@ -1,0 +1,34 @@
+{
+  "name": "snow-storm",
+  "version": "0.8.0",
+  "description": "Snow Storm is a vanilla JS Library which adds snow to any page. Options are documented below, however allow configuration to choose which element to attach to, and which pages to inialise on.",
+  "main": "src/index.js",
+  "scripts": {
+    "prepublish": "./node_modules/.bin/babel src -d dist",
+	"compile": "NODE_ENV=production webpack --progress --colors -p"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicholas-c/snowStorm.git"
+  },
+  "author": "Nicholas Carter",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nicholas-c/snowStorm/issues"
+  },
+  "homepage": "https://github.com/nicholas-c/snowStorm#readme",
+  "devDependencies": {
+    "yarn": "^1.3.2"
+  },
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "core-js": "^2.5.1",
+	"webpack": "^3.8.1",
+	"babel-core": "^6.22.1",
+	"babel-loader": "^6.2.10",
+	"babel-plugin-transform-flow-strip-types": "^6.22.0",
+	"babel-polyfill": "^6.22.0",
+	"babel-preset-es2015": "^6.22.0",
+	"babel-preset-stage-0": "^6.22.0"
+  }
+}
